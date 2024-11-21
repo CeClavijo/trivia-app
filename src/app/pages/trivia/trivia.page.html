@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Trivia Game</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Selection Menu -->
+  <div *ngIf="!isPlaying && !isGameOver">
+    <!-- Game setup menu -->
+    <ion-select [(ngModel)]="selectedCategory" placeholder="Select Category">
+      <ion-select-option *ngFor="let category of categories" [value]="category.id">
+        {{ category.name }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-select [(ngModel)]="selectedDifficulty" placeholder="Select Difficulty">
+      <ion-select-option *ngFor="let difficulty of difficulties" [value]="difficulty">
+        {{ difficulty }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-button expand="block" (click)="startGame()">Play</ion-button>
+  </div>
+
+  <div *ngIf="isPlaying">
+    <!-- Game question and answers -->
+    <h2>{{ questions[currentQuestionIndex]?.question }}</h2>
+    <ion-button
+      *ngFor="let answer of shuffledAnswers"
+      [color]="getButtonColor(answer)"
+      (click)="selectAnswer(answer)"
+      [disabled]="isAnswered"
+    >
+      {{ answer }}
+    </ion-button>
+    <ion-button expand="block" (click)="continue()" [disabled]="!isAnswered">
+      Continue
+    </ion-button>
+  </div>
+
+  <div *ngIf="isGameOver">
+    <!-- Game over and results -->
+    <h2>Game Over!</h2>
+    <p>You answered {{ correctAnswers }} out of {{ totalQuestions }} questions correctly.</p>
+    <p>You got {{ totalQuestions - correctAnswers }} questions wrong.</p>
+    <ion-button expand="block" (click)="returnToMenu()">Return to Menu</ion-button>
+  </div>
+</ion-content>
